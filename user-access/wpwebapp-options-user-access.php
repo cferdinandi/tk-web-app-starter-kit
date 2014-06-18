@@ -258,7 +258,11 @@ function wpwebapp_get_redirect_url_logged_out() {
 // Get logged-in redirect URL
 function wpwebapp_get_redirect_url_logged_in() {
 	$options = wpwebapp_get_plugin_options_user_access();
-	return $options['redirect_logged_in'];
+	if ( $options['redirect_logged_in'] === '' ) {
+		return site_url();
+	} else {
+		return $options['redirect_logged_in'];
+	}
 }
 
 // Get blog post access settings
