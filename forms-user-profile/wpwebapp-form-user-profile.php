@@ -8,10 +8,12 @@
  * ====================================================================== */
 
 // Get user profile data
-function wpwebapp_get_user_profile_info() {
+function wpwebapp_get_user_profile_info( $user_id ) {
 	global $current_user;
 	get_currentuserinfo();
-	$user_id = $current_user->ID;
+	if ( !$user_id ) {
+		$user_id = $current_user->ID;
+	}
 	$gravatar_size = wpwebapp_get_gravatar_size();
 	return array(
 		'gravatar' => get_avatar($user_id, $gravatar_size),
