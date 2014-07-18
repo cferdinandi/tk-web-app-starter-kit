@@ -101,11 +101,6 @@ function wpwebapp_process_login() {
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else {
-				// if ( $login_redirect === '' ) {
-				// 	wp_safe_redirect( $referer, 302 );
-				// } else {
-				// 	wp_safe_redirect( $login_redirect, 302 );
-				// }
 				wp_safe_redirect( $login_redirect, 302 );
 				exit;
 			}
