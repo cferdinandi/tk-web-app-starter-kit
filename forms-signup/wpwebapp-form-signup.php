@@ -23,6 +23,13 @@ function wpwebapp_form_signup() {
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_signup() );
 		$pw_requirements = stripslashes( wpwebapp_get_pw_requirements_text() );
 		$custom_layout = stripslashes( wpwebapp_get_form_signup_custom_layout() );
+		$verify_age = esc_attr( wpwebapp_get_form_signup_verify_age() );
+		$verify_age_checkbox = '';
+
+		if ( $verify_age === 'on' ) {
+			$verify_age_text = stripslashes( wpwebapp_get_form_signup_verify_age_text() );
+			$verify_age_checkbox = wpwebapp_form_field_checkbox_plus( 'wpwebapp-age-verification', $verify_age_text );
+		}
 
 		if ( $custom_layout === '' ) {
 			$form =
@@ -31,6 +38,7 @@ function wpwebapp_form_signup() {
 					wpwebapp_form_field_text_input_plus( 'text', 'wpwebapp-signup-username', __( 'Username', 'wpwebapp' ), $username ) .
 					wpwebapp_form_field_text_input_plus( 'email', 'wpwebapp-signup-email', __( 'Email', 'wpwebapp' ), $email ) .
 					wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-signup-password', sprintf( __( 'Password %s', 'wpwebapp' ), $pw_requirements ) ) .
+					$verify_age_checkbox .
 					wpwebapp_form_field_submit_plus( 'wpwebapp-signup-submit', $submit_class, $submit_text, 'wpwebapp-signup-process-nonce', 'wpwebapp-signup-process' ) .
 				'</form>';
 		} else {
@@ -39,6 +47,7 @@ function wpwebapp_form_signup() {
 				'%username' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-signup-username', __( 'Username', 'wpwebapp' ), $username ),
 				'%email' => wpwebapp_form_field_text_input( 'email', 'wpwebapp-signup-email', __( 'Email', 'wpwebapp' ), $email ),
 				'%password' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-signup-password', sprintf( __( 'Password %s', 'wpwebapp' ), $pw_requirements ) ),
+				'%verification' => $verify_age_checkbox,
 				'%submit' => wpwebapp_form_field_submit( 'wpwebapp-signup-submit', $submit_class, $submit_text, 'wpwebapp-signup-process-nonce', 'wpwebapp-signup-process' ),
 			);
 			$custom_layout = strtr( $custom_layout, $add_fields );
@@ -117,6 +126,7 @@ function wpwebapp_process_signup() {
 			$email = sanitize_email( $_POST['wpwebapp-signup-email'] );
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-signup-password'] );
 			$pw_test = wpwebapp_password_meets_requirements( $password );
+			$verify_age = esc_attr( wpwebapp_get_form_signup_verify_age() );
 
 			// Alert Text
 			$alert_empty_fields = wpwebapp_get_alert_empty_fields();
@@ -125,10 +135,17 @@ function wpwebapp_process_signup() {
 			$alert_invalid_email = wpwebapp_get_alert_email_invalid();
 			$alert_email_taken = wpwebapp_get_alert_email_taken();
 			$alert_pw_requirements = wpwebapp_get_alert_pw_requirements();
+			$alert_age_verification = wpwebapp_get_alert_age_verification();
 
-			// Validate username, email, and password
+			// Validate username, email, password, and age
 			if ( $username === '' || $email === '' || $password === '' ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_signup', $alert_empty_fields );
+				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_username', 'wpwebapp_username', $username );
+				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_email', 'wpwebapp_email', $email );
+				wp_safe_redirect( $referer, 302 );
+				exit;
+			} else if ( $verify_age === 'on' && !isset( $_POST['wpwebapp-age-verification'] ) ) {
+				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_signup', $alert_age_verification );
 				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_username', 'wpwebapp_username', $username );
 				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_email', 'wpwebapp_email', $email );
 				wp_safe_redirect( $referer, 302 );

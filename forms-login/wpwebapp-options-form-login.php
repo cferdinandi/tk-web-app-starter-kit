@@ -38,6 +38,7 @@ function wpwebapp_settings_field_custom_layout_login() {
 		<?php _e( 'Alert', 'wpwebapp' ); ?> - <code>%alert</code><br>
 		<?php _e( 'Username', 'wpwebapp' ); ?> - <code>%username</code><br>
 		<?php _e( 'Password', 'wpwebapp' ); ?> - <code>%password</code><br>
+		<?php _e( 'Forgot Password URL', 'wpwebapp' ); ?> - <code>%forgotpw</code><br>
 		<?php _e( 'Remember Me', 'wpwebapp' ); ?> - <code>%rememberme</code><br>
 		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
 	</label>

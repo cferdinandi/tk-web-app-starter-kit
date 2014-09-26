@@ -43,6 +43,7 @@ function wpwebapp_form_login() {
 				'%alert' => $alert,
 				'%username' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-username', __( 'Username or Email', 'wpwebapp' ), $username ),
 				'%password' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-password', __( 'Password ', 'wpwebapp' ) ),
+				'%forgotpw' => $forgot_pw,
 				'%rememberme' => wpwebapp_form_field_checkbox( 'wpwebapp-rememberme', __( 'Remember Me', 'wpwebapp' ), 'rememberme' ),
 				'%submit' => wpwebapp_form_field_submit( 'wpwebapp-login-submit', $submit_class, $submit_text, 'wpwebapp-login-process-nonce', 'wpwebapp-login-process' ),
 			);
