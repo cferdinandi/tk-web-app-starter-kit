@@ -127,9 +127,11 @@ function wpwebapp_process_signup() {
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-signup-password'] );
 			$pw_test = wpwebapp_password_meets_requirements( $password );
 			$verify_age = esc_attr( wpwebapp_get_form_signup_verify_age() );
+			$is_invite_only = wpwebapp_get_is_invite_only();
 
 			// Alert Text
 			$alert_empty_fields = wpwebapp_get_alert_empty_fields();
+			$alert_invite_only = wpwebapp_get_alert_invite_only();
 			$alert_username_invalid = wpwebapp_get_alert_username_invalid();
 			$alert_username_taken = wpwebapp_get_alert_username_taken();
 			$alert_invalid_email = wpwebapp_get_alert_email_invalid();
@@ -140,6 +142,12 @@ function wpwebapp_process_signup() {
 			// Validate username, email, password, and age
 			if ( $username === '' || $email === '' || $password === '' ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_signup', $alert_empty_fields );
+				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_username', 'wpwebapp_username', $username );
+				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_email', 'wpwebapp_email', $email );
+				wp_safe_redirect( $referer, 302 );
+				exit;
+			} else if ( $is_invite_only === 'on' && !wpwebapp_verify_invite_status( $email ) ) {
+				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_signup', $alert_invite_only );
 				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_username', 'wpwebapp_username', $username );
 				wpwebapp_set_alert_message( 'wpwebapp_credentials_signup_email', 'wpwebapp_email', $email );
 				wp_safe_redirect( $referer, 302 );
