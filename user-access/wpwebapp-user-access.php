@@ -28,7 +28,7 @@ function wpwebapp_user_access_fields() {
 	global $post;
 	$user_access_setting = get_post_meta( $post->ID, 'wpwebapp_user_access_setting', true );
 	if ( !$user_access_setting || $user_access_setting === '' ) {
-		$user_access_setting = 'all';
+		$user_access_setting = wpwebapp_get_default_page_access();
 	}
 	?>
 	<?php wp_nonce_field( 'wpwebapp-user-access-fields-nonce', 'wpwebapp-user-access-fields' ); ?>

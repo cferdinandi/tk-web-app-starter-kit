@@ -64,13 +64,15 @@ function wpwebapp_form_pw_reset() {
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_pw_reset() );
 		$pw_requirements = stripslashes( wpwebapp_get_pw_requirements_text() );
 		$custom_layout = stripslashes( wpwebapp_get_form_signup_custom_layout_pw_reset() );
+		$disable_pw_confirm = wpwebapp_get_disable_pw_confirmation();
 
 		if ( $custom_layout === '' ) {
+			$pw_confirm = ( $disable_pw_confirm === 'on' ? '' : wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-pw-reset-new-2', __( 'Confirm New Password', 'wpwebapp' ) ) );
 			$form =
 				$alert .
 				'<form class="form-wpwebapp" id="wpwebapp-form-pw-reset" name="wpwebapp-form-pw-reset" action="" method="post">' .
 					wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-pw-reset-new-1', sprintf( __( 'New Password %s', 'wpwebapp' ), $pw_requirements ) ) .
-					wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-pw-reset-new-2', __( 'Confirm New Password', 'wpwebapp' ) ) .
+					$pw_confirm .
 					wpwebapp_form_field_text_input( 'hidden', 'wpwebapp-pw-reset-id', '', $user_id ) .
 					wpwebapp_form_field_submit_plus( 'wpwebapp-reset-pw-submit', $submit_class, $submit_text, 'wpwebapp-reset-pw-process-nonce', 'wpwebapp-reset-pw-process', '3' ) .
 				'</form>';
@@ -281,6 +283,7 @@ function wpwebapp_process_pw_reset() {
 			$pw_new_1 = wp_filter_nohtml_kses( $_POST['wpwebapp-pw-reset-new-1'] );
 			$pw_new_2 = wp_filter_nohtml_kses( $_POST['wpwebapp-pw-reset-new-2'] );
 			$pw_test = wpwebapp_password_meets_requirements( $pw_new_1 );
+			$disable_pw_confirm = wpwebapp_get_disable_pw_confirmation();
 
 			// Alert Messages
 			$alert_empty_fields = wpwebapp_get_alert_empty_fields();
@@ -288,11 +291,11 @@ function wpwebapp_process_pw_reset() {
 			$alert_pw_requirements = wpwebapp_get_alert_pw_requirements();
 
 			// Validate and authenticate passwords
-			if ( $pw_new_1 === '' || $pw_new_2 === '' ) {
+			if ( $pw_new_1 === '' || ( $disable_pw_confirm === 'off' && $pw_new_2 === '' ) ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_reset', $alert_empty_fields );
 				wp_safe_redirect( $referer, 302 );
 				exit;
-			} else if ( $pw_new_1 !== $pw_new_2 ) {
+			} else if ( $disable_pw_confirm === 'off' && $pw_new_1 !== $pw_new_2 ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_reset', $alert_pw_match );
 				wp_safe_redirect( $referer, 302 );
 				exit;

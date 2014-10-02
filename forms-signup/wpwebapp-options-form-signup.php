@@ -29,6 +29,24 @@ function wpwebapp_settings_field_button_text_signup() {
 	<?php
 }
 
+function wpwebapp_settings_field_verify_age() {
+	$options = wpwebapp_get_plugin_options_forms_signup();
+	?>
+	<label for="verify-age">
+		<input type="checkbox" name="wpwebapp_plugin_options_forms_signup[verify_age]" id="verify-age" <?php checked( 'on', $options['verify_age'] ); ?>>
+		<?php _e( 'Verify user\'s age', 'wpwebapp' ); ?>
+	</label>
+	<?php
+}
+
+function wpwebapp_settings_field_verify_age_text() {
+	$options = wpwebapp_get_plugin_options_forms_signup();
+	?>
+	<input type="text" name="wpwebapp_plugin_options_forms_signup[verify_age_text]" id="verify-age-text" value="<?php echo esc_attr( $options['verify_age_text'] ); ?>"><br>
+	<label class="description" for="verify-age-text"><?php _e( 'Default: <code>I am at least 13 years old.</code>', 'wpwebapp' ); ?></label>
+	<?php
+}
+
 function wpwebapp_settings_field_custom_layout_signup() {
 	$options = wpwebapp_get_plugin_options_forms_signup();
 	?>
@@ -39,6 +57,7 @@ function wpwebapp_settings_field_custom_layout_signup() {
 		<?php _e( 'Username', 'wpwebapp' ); ?> - <code>%username</code><br>
 		<?php _e( 'Email', 'wpwebapp' ); ?> - <code>%email</code><br>
 		<?php _e( 'Password', 'wpwebapp' ); ?> - <code>%password</code><br>
+		<?php _e( 'Age Verification', 'wpwebapp' ); ?> - <code>%verification</code><br>
 		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
 	</label>
 	<?php
@@ -109,6 +128,8 @@ function wpwebapp_get_plugin_options_forms_signup() {
 	$defaults = array(
 		'button_class' => '',
 		'button_text_signup' => '',
+		'verify_age' => 'on',
+		'verify_age_text' => '',
 		'custom_layout' => '',
 		'send_new_user_email_admin' => 'off',
 		'send_new_user_email_user' => 'off',
@@ -144,6 +165,12 @@ function wpwebapp_plugin_options_validate_forms_signup( $input ) {
 
 	if ( isset( $input['button_text_signup'] ) && ! empty( $input['button_text_signup'] ) )
 		$output['button_text_signup'] = wp_filter_nohtml_kses( $input['button_text_signup'] );
+
+	if ( !isset( $input['verify_age'] ) )
+		$output['verify_age'] = 'off';
+
+	if ( isset( $input['verify_age_text'] ) && ! empty( $input['verify_age_text'] ) )
+		$output['verify_age_text'] = wp_filter_nohtml_kses( $input['verify_age_text'] );
 
 	if ( isset( $input['custom_layout'] ) && ! empty( $input['custom_layout'] ) )
 		$output['custom_layout'] = wp_filter_post_kses( $input['custom_layout'] );
@@ -212,6 +239,8 @@ function wpwebapp_plugin_options_init_forms_signup() {
 	// Fields
 	add_settings_section( 'forms', '',  '__return_false', 'wpwebapp_plugin_options_forms_signup' );
 	add_settings_field( 'button_class', __( 'Button Class', 'wpwebapp' ) . '<div class="description">' . __( 'Class to apply to form submit buttons.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_button_class_signup', 'wpwebapp_plugin_options_forms_signup', 'forms' );
+	add_settings_field( 'verify_age', __( 'Verify Age', 'wpwebapp' ), 'wpwebapp_settings_field_verify_age', 'wpwebapp_plugin_options_forms_signup', 'forms' );
+	add_settings_field( 'verify_age_text', __( 'Verify Age Text', 'wpwebapp' ) . '<div class="description">' . __( 'Text to display for the age verification checkbox.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_verify_age_text', 'wpwebapp_plugin_options_forms_signup', 'forms' );
 	add_settings_field( 'button_text_signup', __( 'Button Text', 'wpwebapp' ) . '<div class="description">' . __( 'Text for the signup button.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_button_text_signup', 'wpwebapp_plugin_options_forms_signup', 'forms' );
 	add_settings_field( 'custom_layout', __( 'Custom Layout', 'wpwebapp' ) . '<div class="description">' . __( 'Customize the layout of the form with your own markup.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_custom_layout_signup', 'wpwebapp_plugin_options_forms_signup', 'forms' );
 	add_settings_field( 'send_new_user_email_admin', __( 'Send Admin Notification', 'wpwebapp' ), 'wpwebapp_settings_field_send_new_user_email_admin', 'wpwebapp_plugin_options_forms_signup', 'forms' );
@@ -260,6 +289,22 @@ function wpwebapp_get_form_signup_text() {
 		return __( 'Signup', 'wpwebapp' );
 	} else {
 		return $options['button_text_signup'];
+	}
+}
+
+// Get setting for whether or not to include age verification
+function wpwebapp_get_form_signup_verify_age() {
+	$options = wpwebapp_get_plugin_options_forms_signup();
+	return $options['verify_age'];
+}
+
+// Get text for age verification
+function wpwebapp_get_form_signup_verify_age_text() {
+	$options = wpwebapp_get_plugin_options_forms_signup();
+	if ( $options['verify_age_text'] === '' ) {
+		return __( 'I am at least 13 years old.', 'wpwebapp' );
+	} else {
+		return $options['verify_age_text'];
 	}
 }
 

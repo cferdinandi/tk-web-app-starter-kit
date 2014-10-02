@@ -77,6 +77,14 @@ function wpwebapp_settings_field_alert_email_taken() {
 	<?php
 }
 
+function wpwebapp_settings_field_alert_age_verification() {
+	$options = wpwebapp_get_plugin_options_alerts();
+	?>
+	<input type="text" name="wpwebapp_plugin_options_alerts[alert_age_verification]" id="alert-age-verification" value="<?php echo esc_html( $options['alert_age_verification'] ); ?>"><br>
+	<label class="description" for="alert-age-verification"><?php _e( 'Default: <code>&lt;p&gt;You must be at least 13 years old to use this app.&lt;/p&gt;</code>', 'wpwebapp' ); ?></label>
+	<?php
+}
+
 function wpwebapp_settings_field_alert_pw_incorrect() {
 	$options = wpwebapp_get_plugin_options_alerts();
 	?>
@@ -179,6 +187,7 @@ function wpwebapp_get_plugin_options_alerts() {
 		'alert_username_taken' => '',
 		'alert_email_invalid' => '',
 		'alert_email_taken' => '',
+		'alert_age_verification' => '',
 		'alert_pw_incorrect' => '',
 		'alert_email_change_success' => '',
 		'alert_pw_change_success' => '',
@@ -236,6 +245,9 @@ function wpwebapp_plugin_options_validate_alerts( $input ) {
 
 	if ( isset( $input['alert_email_taken'] ) && ! empty( $input['alert_email_taken'] ) )
 		$output['alert_email_taken'] = wp_filter_post_kses( $input['alert_email_taken'] );
+
+	if ( isset( $input['alert_age_verification'] ) && ! empty( $input['alert_age_verification'] ) )
+		$output['alert_age_verification'] = wp_filter_post_kses( $input['alert_age_verification'] );
 
 	if ( isset( $input['alert_pw_incorrect'] ) && ! empty( $input['alert_pw_incorrect'] ) )
 		$output['alert_pw_incorrect'] = wp_filter_post_kses( $input['alert_pw_incorrect'] );
@@ -318,6 +330,7 @@ function wpwebapp_plugin_options_init_alerts() {
 	add_settings_field( 'alert_username_taken', __( 'Username Taken', 'wpwebapp' ) . '<div class="description">' . __( 'Signup form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_username_taken', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_email_invalid', __( 'Invalid Email', 'wpwebapp' ) . '<div class="description">' . __( 'Signup form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_email_invalid', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_email_taken', __( 'Email Taken', 'wpwebapp' ) . '<div class="description">' . __( 'Signup form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_email_taken', 'wpwebapp_plugin_options_alerts', 'alerts' );
+	add_settings_field( 'alert_age_verification', __( 'Age Verification', 'wpwebapp' ) . '<div class="description">' . __( 'Signup form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_age_verification', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_pw_incorrect', __( 'Incorrect Password', 'wpwebapp' ) . '<div class="description">' . __( 'Password and Email change forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_pw_incorrect', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_email_change_success', __( 'Email Change Success', 'wpwebapp' ) . '<div class="description">' . __( 'Update Email form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_email_change_success', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_pw_change_success', __( 'Password Change Success', 'wpwebapp' ) . '<div class="description">' . __( 'Password Change form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_pw_change_success', 'wpwebapp_plugin_options_alerts', 'alerts' );
@@ -459,6 +472,16 @@ function wpwebapp_get_alert_email_taken() {
 		return '<p>' . __( 'An account with this email address already exists.', 'wpwebapp' ) . '</p>';
 	} else {
 		return $options['alert_email_taken'];
+	}
+}
+
+// Get alert for when email address already exists
+function wpwebapp_get_alert_age_verification() {
+	$options = wpwebapp_get_plugin_options_alerts();
+	if ( $options['alert_age_verification'] === '' ) {
+		return '<p>' . __( 'You must be at least 13 years old to use this app.', 'wpwebapp' ) . '</p>';
+	} else {
+		return $options['alert_age_verification'];
 	}
 }
 

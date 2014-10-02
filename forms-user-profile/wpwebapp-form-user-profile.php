@@ -8,10 +8,12 @@
  * ====================================================================== */
 
 // Get user profile data
-function wpwebapp_get_user_profile_info() {
+function wpwebapp_get_user_profile_info( $user_id = null ) {
 	global $current_user;
 	get_currentuserinfo();
-	$user_id = $current_user->ID;
+	if ( !$user_id ) {
+		$user_id = $current_user->ID;
+	}
 	$gravatar_size = wpwebapp_get_gravatar_size();
 	return array(
 		'gravatar' => get_avatar($user_id, $gravatar_size),
@@ -79,7 +81,8 @@ function wpwebapp_form_user_profile() {
 			}
 
 			if ( $profile_fields['twitter'] === 'on' ) {
-				$field_twitter = wpwebapp_form_field_text_input_plus( 'text', 'wpwebapp-user-profile-twitter', __( 'Twitter', 'wpwebapp' ), '@' . esc_attr($value['twitter']) );
+				$prefix = ( $value['twitter'] === '' ? '' : '@' );
+				$field_twitter = wpwebapp_form_field_text_input_plus( 'text', 'wpwebapp-user-profile-twitter', __( 'Twitter', 'wpwebapp' ), $prefix . esc_attr($value['twitter']) );
 			}
 
 			if ( $profile_fields['facebook'] === 'on' ) {
@@ -112,6 +115,7 @@ function wpwebapp_form_user_profile() {
 				'</form>';
 
 		} else {
+			$prefix = ( $value['twitter'] === '' ? '' : '@' );
 			$add_fields = array(
 				'%alert' => $alert,
 				'%gravatar' => $value['gravatar'],
@@ -120,7 +124,7 @@ function wpwebapp_form_user_profile() {
 				'%location' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-location', __( 'Location', 'wpwebapp'), esc_attr($value['location']) ),
 				'%email' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-email', __( 'Email (public)', 'wpwebapp' ), esc_attr($value['email']) ),
 				'%website' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-website', __( 'Website', 'wpwebapp' ), esc_attr($value['website']) ),
-				'%twitter' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-twitter', __( 'Twitter', 'wpwebapp' ), '@' . esc_attr($value['twitter']) ),
+				'%twitter' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-twitter', __( 'Twitter', 'wpwebapp' ), $prefix . esc_attr($value['twitter']) ),
 				'%facebook' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-facebook', __( 'Facebook', 'wpwebapp' ), esc_attr($value['facebook']) ),
 				'%linkedin' => wpwebapp_form_field_text_input( 'text', 'wpwebapp-user-profile-linkedin', __( 'LinkedIn', 'wpwebapp' ), esc_attr($value['linkedin']) ),
 				'%submit' => wpwebapp_form_field_submit( 'wpwebapp-update-profile-submit', $submit_class, $submit_text, 'wpwebapp-update-profile-process-nonce', 'wpwebapp-update-profile-process' ),
@@ -233,9 +237,7 @@ add_action('init', 'wpwebapp_process_update_profile');
 
 // Add user profile fields to backend
 function wpwebapp_add_user_profile_to_backend( $user ) {
-	global $current_user;
-	get_currentuserinfo();
-	$user_id = $current_user->ID;
+	$user_id = $user->ID;
 	?>
 
 		<h3>WordPress for Web Apps User Profile Info</h3>

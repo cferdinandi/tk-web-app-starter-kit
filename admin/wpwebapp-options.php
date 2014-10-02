@@ -26,10 +26,10 @@ function wpwebapp_plugin_options_render_main_page() {
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_alerts">Alerts</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_login">Login Form</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_signup">Signup Form</a></li>' .
-				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_pw_reset">Reset Password Form</a></li>' .
+				'<li><a href="admin.php?page=wpwebapp_plugin_options_pw_reset">Reset Password Form</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_user_profile">User Profile Form</a></li>' .
-				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_pw_change">Change Password Form</a></li>' .
-				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_email_change">Change Email Form</a></li>' .
+				'<li><a href="admin.php?page=wpwebapp_plugin_options_pw_change">Change Password Form</a></li>' .
+				'<li><a href="admin.php?page=wpwebapp_plugin_options_email_change">Change Email Form</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_forms_delete_account">Delete Account Button</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_logout_links">Logout Links</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_usernames">Usernames</a></li>' .

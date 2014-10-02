@@ -55,6 +55,40 @@ function wpwebapp_settings_field_block_wp_backend_access() {
 	}
 }
 
+// Used in wpwebapp_settings_field_default_page_access()
+function wpwebapp_settings_field_default_page_access_choices() {
+	$block_wp_backend_access = array(
+		'all' => array(
+			'value' => 'all',
+			'label' => __( 'All Users', 'wpwebapp' )
+		),
+		'loggedin' => array(
+			'value' => 'loggedin',
+			'label' => __( 'Logged In Only', 'wpwebapp' )
+		),
+		'loggedout' => array(
+			'value' => 'loggedout',
+			'label' => __( 'Logged Out Only', 'wpwebapp' )
+		)
+	);
+
+	return apply_filters( 'wpwebapp_settings_field_default_page_access_choices', $block_wp_backend_access );
+}
+
+function wpwebapp_settings_field_default_page_access() {
+	$options = wpwebapp_get_plugin_options_user_access();
+	foreach ( wpwebapp_settings_field_default_page_access_choices() as $button ) {
+	?>
+	<div class="layout">
+		<label class="description">
+			<input type="radio" name="wpwebapp_plugin_options_user_access[default_page_access]" value="<?php echo esc_attr( $button['value'] ); ?>" <?php checked( $options['default_page_access'], $button['value'] ); ?>>
+			<?php echo $button['label']; ?>
+		</label>
+	</div>
+	<?php
+	}
+}
+
 function wpwebapp_settings_field_redirect_logged_out() {
 	$options = wpwebapp_get_plugin_options_user_access();
 	?>
@@ -96,6 +130,7 @@ function wpwebapp_get_plugin_options_user_access() {
 	$saved = (array) get_option( 'wpwebapp_plugin_options_user_access' );
 	$defaults = array(
 		'block_wp_backend_access' => 'admin',
+		'default_page_access' => 'all',
 		'redirect_logged_in' => '',
 		'redirect_logged_out' => '',
 		'blog_posts_require_login' => 'off',
@@ -125,6 +160,9 @@ function wpwebapp_plugin_options_validate_user_access( $input ) {
 
 	if ( isset( $input['block_wp_backend_access'] ) && array_key_exists( $input['block_wp_backend_access'], wpwebapp_settings_field_block_wp_backend_access_choices() ) )
 		$output['block_wp_backend_access'] = $input['block_wp_backend_access'];
+
+	if ( isset( $input['default_page_access'] ) && array_key_exists( $input['default_page_access'], wpwebapp_settings_field_default_page_access() ) )
+		$output['default_page_access'] = $input['default_page_access'];
 
 	if ( isset( $input['redirect_logged_out'] ) && ! empty( $input['redirect_logged_out'] ) )
 		$output['redirect_logged_out'] = wp_filter_nohtml_kses( $input['redirect_logged_out'] );
@@ -183,6 +221,7 @@ function wpwebapp_plugin_options_init_user_access() {
 	// Fields
 	add_settings_section( 'access', '',  '__return_false', 'wpwebapp_plugin_options_user_access' );
 	add_settings_field( 'block_wp_backend_access', __( 'Block Backend Access', 'wpwebapp' ) . '<div class="description">' . __( 'Minimum role required to access the WordPress backend and see the admin bar (higher is more secure)', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_block_wp_backend_access', 'wpwebapp_plugin_options_user_access', 'access' );
+	add_settings_field( 'default_page_access', __( 'Default Page Access', 'wpwebapp' ) . '<div class="description">' . __( 'Default setting for who can view pages', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_default_page_access', 'wpwebapp_plugin_options_user_access', 'access' );
 	add_settings_field( 'redirect_logged_out', __( 'Logged-Out Redirect', 'wpwebapp' ) . '<div class="description">' . __( 'Where to redirect logged-our users', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_redirect_logged_out', 'wpwebapp_plugin_options_user_access', 'access' );
 	add_settings_field( 'redirect_logged_in', __( 'Logged-In Redirect', 'wpwebapp' ) . '<div class="description">' . __( 'Where to redirect logged-in users', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_redirect_logged_in', 'wpwebapp_plugin_options_user_access', 'access' );
 	add_settings_field( 'blog_posts_require_login', __( 'Blog Post Access', 'wpwebapp' ), 'wpwebapp_settings_field_blog_posts_require_login', 'wpwebapp_plugin_options_user_access', 'access' );
@@ -245,6 +284,11 @@ function wpwebapp_get_block_admin_access() {
 
 }
 
+// Get default page access setting
+function wpwebapp_get_default_page_access() {
+	return $options['default_page_access'];
+}
+
 // Get logged-out redirect URL
 function wpwebapp_get_redirect_url_logged_out() {
 	$options = wpwebapp_get_plugin_options_user_access();
@@ -258,7 +302,11 @@ function wpwebapp_get_redirect_url_logged_out() {
 // Get logged-in redirect URL
 function wpwebapp_get_redirect_url_logged_in() {
 	$options = wpwebapp_get_plugin_options_user_access();
-	return $options['redirect_logged_in'];
+	if ( $options['redirect_logged_in'] === '' ) {
+		return site_url();
+	} else {
+		return $options['redirect_logged_in'];
+	}
 }
 
 // Get blog post access settings
