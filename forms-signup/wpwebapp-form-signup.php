@@ -123,7 +123,7 @@ function wpwebapp_process_signup() {
 			$referer = esc_url_raw( wpwebapp_get_url() );
 			$front_page = esc_url_raw( wpwebapp_get_redirect_url_logged_in() );
 			$username = sanitize_user( $_POST['wpwebapp-signup-username'] );
-			$email = sanitize_email( $_POST['wpwebapp-signup-email'] );
+			$email = $_POST['wpwebapp-signup-email'];
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-signup-password'] );
 			$pw_test = wpwebapp_password_meets_requirements( $password );
 			$verify_age = esc_attr( wpwebapp_get_form_signup_verify_age() );

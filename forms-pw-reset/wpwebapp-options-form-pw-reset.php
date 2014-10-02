@@ -66,6 +66,16 @@ function wpwebapp_settings_field_custom_layout_pw_forgot() {
 	<?php
 }
 
+function wpwebapp_settings_field_disable_pw_confirm() {
+	$options = wpwebapp_get_plugin_options_pw_reset();
+	?>
+	<label for="disable-pw-confirm">
+		<input type="checkbox" name="wpwebapp_plugin_options_pw_reset[disable_pw_confirm]" id="disable-pw-confirm" <?php checked( 'on', $options['disable_pw_confirm'] ); ?>>
+		<?php _e( 'Do not require user to confirm new password', 'wpwebapp' ); ?>
+	</label>
+	<?php
+}
+
 function wpwebapp_settings_field_custom_layout_pw_reset() {
 	$options = wpwebapp_get_plugin_options_pw_reset();
 	?>
@@ -139,6 +149,7 @@ function wpwebapp_get_plugin_options_pw_reset() {
 		'forgot_pw_url' => '',
 		'forgot_pw_url_text' => '',
 		'custom_layout_pw_forgot' => '',
+		'disable_pw_confirm' => 'off',
 		'custom_layout_pw_reset' => '',
 		'email_disable_pw_reset' => 'on',
 		'pw_reset_email_from' => '',
@@ -185,6 +196,9 @@ function wpwebapp_plugin_options_validate_pw_reset( $input ) {
 
 	if ( isset( $input['custom_layout_pw_forgot'] ) && ! empty( $input['custom_layout_pw_forgot'] ) )
 		$output['custom_layout_pw_forgot'] = wp_filter_post_kses( $input['custom_layout_pw_forgot'] );
+
+	if ( isset( $input['disable_pw_confirm'] ) )
+		$output['disable_pw_confirm'] = 'on';
 
 	if ( isset( $input['custom_layout_pw_reset'] ) && ! empty( $input['custom_layout_pw_reset'] ) )
 		$output['custom_layout_pw_reset'] = wp_filter_post_kses( $input['custom_layout_pw_reset'] );
@@ -255,6 +269,7 @@ function wpwebapp_plugin_options_init_pw_reset() {
 	add_settings_field( 'forgot_pw_url', __( 'Forgot Password URL', 'wpwebapp' ) . '<div class="description">' . __( 'A link to the "forgot password" page.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_forgot_pw_url', 'wpwebapp_plugin_options_pw_reset', 'forms' );
 	add_settings_field( 'forgot_pw_url_text', __( 'Forgot Password URL Text', 'wpwebapp' ) . '<div class="description">' . __( 'Text for the "forgot password" URL (only shown if URL is set).', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_forgot_pw_url_text', 'wpwebapp_plugin_options_pw_reset', 'forms' );
 	add_settings_field( 'custom_layout_pw_forgot', __( 'Custom Layout PW Forgot', 'wpwebapp' ) . '<div class="description">' . __( 'Customize the layout of the forgot password form with your own markup.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_custom_layout_pw_forgot', 'wpwebapp_plugin_options_pw_reset', 'forms' );
+	add_settings_field( 'disable_pw_confirm', __( 'Disable PW Confirmation', 'wpwebapp' ), 'wpwebapp_settings_field_disable_pw_confirm', 'wpwebapp_plugin_options_pw_reset', 'forms' );
 	add_settings_field( 'custom_layout_pw_reset', __( 'Custom Layout PW Reset', 'wpwebapp' ) . '<div class="description">' . __( 'Customize the layout of the password reset form with your own markup.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_custom_layout_pw_reset', 'wpwebapp_plugin_options_pw_reset', 'forms' );
 	add_settings_field( 'email_disable_pw_reset', __( 'Disable Admin Email', 'wpwebapp' ), 'wpwebapp_settings_field_disable_pw_reset_email', 'wpwebapp_plugin_options_pw_reset', 'forms' );
 	add_settings_field( 'pw_reset_email_from', __( 'Reset Email From Address', 'wpwebapp' ) . '<div class="description">' . __( 'Email account to send password reset emails to the user from.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_pw_reset_email_from', 'wpwebapp_plugin_options_pw_reset', 'forms' );
@@ -334,6 +349,12 @@ function wpwebapp_get_pw_forgot_url_text() {
 function wpwebapp_get_form_signup_custom_layout_pw_forgot() {
 	$options = wpwebapp_get_plugin_options_pw_reset();
 	return $options['custom_layout_pw_forgot'];
+}
+
+// Get setting for disabling password confirmation on reset
+function wpwebapp_get_disable_pw_confirmation() {
+	$options = wpwebapp_get_plugin_options_pw_reset();
+	return $options['disable_pw_confirm'];
 }
 
 // Get custom layout pw reset
