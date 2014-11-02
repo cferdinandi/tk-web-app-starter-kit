@@ -70,7 +70,8 @@ function wpwebapp_process_login() {
 
 			// Login variables
 			$referer = esc_url_raw( wpwebapp_get_url() );
-			$login_redirect = esc_url_raw( wpwebapp_get_redirect_url_logged_in() );
+			// $login_redirect = esc_url_raw( wpwebapp_get_redirect_url_logged_in() );
+			$login_redirect = esc_url_raw( coursebuilder_get_url() );
 			$alert_login = stripslashes( wpwebapp_get_alert_login_incorrect() );
 			$username = sanitize_user( $_POST['wpwebapp-username'] );
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-password'] );
