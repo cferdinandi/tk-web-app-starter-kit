@@ -315,5 +315,3 @@ function wpwebapp_save_user_profile_from_backend( $user_id ) {
 }
 add_action( 'personal_options_update', 'wpwebapp_save_user_profile_from_backend' );
 add_action( 'edit_user_profile_update', 'wpwebapp_save_user_profile_from_backend' );
-
-?>

@@ -70,8 +70,6 @@ function wpwebapp_process_login() {
 
 			// Login variables
 			$referer = esc_url_raw( wpwebapp_get_url() );
-			// $login_redirect = esc_url_raw( wpwebapp_get_redirect_url_logged_in() );
-			$login_redirect = esc_url_raw( coursebuilder_get_url() );
 			$alert_login = stripslashes( wpwebapp_get_alert_login_incorrect() );
 			$username = sanitize_user( $_POST['wpwebapp-username'] );
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-password'] );
@@ -100,12 +98,15 @@ function wpwebapp_process_login() {
 			if ( is_wp_error( $login ) ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_login', $alert_login );
 				wpwebapp_set_alert_message( 'wpwebapp_credentials_login_username', 'wpwebapp_username', $username );
-				wp_safe_redirect( $referer, 302 );
-				exit;
-			} else {
-				wp_safe_redirect( $login_redirect, 302 );
-				exit;
+				// wp_safe_redirect( $referer, 302 );
+				// exit;
+			// } else {
+			// 	wp_safe_redirect( $login_redirect, 302 );
+			// 	exit;
 			}
+
+			wp_safe_redirect( $referer, 302 );
+			exit;
 
 		} else {
 			die( 'Security check' );
@@ -113,5 +114,3 @@ function wpwebapp_process_login() {
 	}
 }
 add_action('init', 'wpwebapp_process_login');
-
-?>

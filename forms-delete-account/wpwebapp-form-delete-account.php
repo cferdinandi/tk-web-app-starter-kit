@@ -54,5 +54,3 @@ function wpwebapp_process_delete_account() {
 	}
 }
 add_action( 'init', 'wpwebapp_process_delete_account' );
-
-?>

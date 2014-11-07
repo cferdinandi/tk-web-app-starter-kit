@@ -35,6 +35,10 @@ function wpwebapp_form_signup() {
 			$form =
 				$alert .
 				'<form class="form-wpwebapp" id="wpwebapp-form-signup" name="wpwebapp-form-signup" action="" method="post">' .
+					'<div class="wpwebapp-signup-name-field">' .
+						'<label>Your Name</label>' .
+						'<input type="text" id="wpwebapp-signup-name" name="wpwebapp-signup-name" value="" placeholder="Your Name">' .
+					'</div>' .
 					wpwebapp_form_field_text_input_plus( 'text', 'wpwebapp-signup-username', __( 'Username', 'wpwebapp' ), $username ) .
 					wpwebapp_form_field_text_input_plus( 'email', 'wpwebapp-signup-email', __( 'Email', 'wpwebapp' ), $email ) .
 					wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-signup-password', sprintf( __( 'Password %s', 'wpwebapp' ), $pw_requirements ) ) .
@@ -53,6 +57,10 @@ function wpwebapp_form_signup() {
 			$custom_layout = strtr( $custom_layout, $add_fields );
 			$form =
 				'<form class="form-wpwebapp" id="wpwebapp-form-signup" name="wpwebapp-form-signup" action="" method="post">' .
+					'<div class="wpwebapp-signup-name-field">' .
+						'<label>Your Name</label>' .
+						'<input type="text" id="wpwebapp-signup-name" name="wpwebapp-signup-name" value="" placeholder="Your Name">' .
+					'</div>' .
 					$custom_layout .
 				'</form>';
 		}
@@ -139,6 +147,11 @@ function wpwebapp_process_signup() {
 			$alert_pw_requirements = wpwebapp_get_alert_pw_requirements();
 			$alert_age_verification = wpwebapp_get_alert_age_verification();
 
+			// If honeypot is completed, stop processing login
+			if ( !empty( $_POST['wpwebapp-signup-name'] ) ) {
+				return;
+			}
+
 			// Validate username, email, password, and age
 			if ( $username === '' || $email === '' || $password === '' ) {
 				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_signup', $alert_empty_fields );
@@ -216,5 +229,3 @@ add_action('init', 'wpwebapp_process_signup');
 if ( !function_exists( 'wp_new_user_notification' ) ) {
 	function wp_new_user_notification() {}
 }
-
-?>

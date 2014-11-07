@@ -115,5 +115,3 @@ function wpwebapp_process_user_access_post_settings() {
 
 }
 add_action('wp', 'wpwebapp_process_user_access_post_settings');
-
-?>

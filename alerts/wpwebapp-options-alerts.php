@@ -610,5 +610,3 @@ function wpwebapp_get_alert_profile_update_failure() {
 		return $options['alert_profile_update_failure'];
 	}
 }
-
-?>

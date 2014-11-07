@@ -47,5 +47,3 @@ function wpwebapp_option_page_capability_navigation( $capability ) {
 	return 'edit_theme_options';
 }
 add_filter( 'option_page_capability_wpwebapp_options_navigation', 'wpwebapp_option_page_capability_navigation' );
-
-?>

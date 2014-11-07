@@ -315,5 +315,3 @@ function wpwebapp_get_blog_post_access() {
 	$options = wpwebapp_get_plugin_options_user_access();
 	return $options['blog_posts_require_login'];
 }
-
-?>

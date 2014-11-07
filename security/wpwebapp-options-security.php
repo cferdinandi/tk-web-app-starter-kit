@@ -332,5 +332,3 @@ function wpwebapp_get_pw_requirements_text() {
 		return strtr( $setting, $scrubber );
 	}
 }
-
-?>

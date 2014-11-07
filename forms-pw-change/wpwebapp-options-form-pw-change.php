@@ -215,5 +215,3 @@ function wpwebapp_get_pw_change_custom_layout() {
 	$options = wpwebapp_get_plugin_options_pw_change();
 	return $options['custom_layout'];
 }
-
-?>

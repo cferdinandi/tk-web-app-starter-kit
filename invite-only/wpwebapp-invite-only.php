@@ -26,5 +26,3 @@ function wpwebapp_verify_invite_status( $email ) {
 	return false;
 
 }
-
-?>

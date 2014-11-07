@@ -47,5 +47,3 @@ function wpwebapp_option_page_capability_logout_links( $capability ) {
 	return 'edit_theme_options';
 }
 add_filter( 'option_page_capability_wpwebapp_options_logout_links', 'wpwebapp_option_page_capability_logout_links' );
-
-?>

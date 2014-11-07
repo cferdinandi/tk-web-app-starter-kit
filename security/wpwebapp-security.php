@@ -84,5 +84,3 @@ function wpwebapp_disable_admin_bar() {
 	}
 }
 add_filter( 'init' , 'wpwebapp_disable_admin_bar');
-
-?>

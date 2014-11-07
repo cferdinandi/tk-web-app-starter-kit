@@ -167,5 +167,3 @@ function wpwebapp_get_invitees() {
 	$invitees = explode("\n", $invitees);
 	return $invitees;
 }
-
-?>

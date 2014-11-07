@@ -351,5 +351,3 @@ function wpwebapp_get_send_new_user_email_message() {
 	$options = wpwebapp_get_plugin_options_forms_signup();
 	return $options['new_user_email_message'];
 }
-
-?>

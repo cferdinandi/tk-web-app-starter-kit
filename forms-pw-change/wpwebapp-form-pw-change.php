@@ -115,5 +115,3 @@ function wpwebapp_process_pw_change() {
 	}
 }
 add_action('init', 'wpwebapp_process_pw_change');
-
-?>

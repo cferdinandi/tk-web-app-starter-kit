@@ -330,5 +330,3 @@ add_action('init', 'wpwebapp_process_pw_reset');
 if ( !function_exists( 'wp_password_change_notification' ) && wpwebapp_get_email_disable_password_change() === 'on' ) {
 	function wp_password_change_notification() { }
 }
-
-?>

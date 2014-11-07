@@ -197,5 +197,3 @@ function wpwebapp_get_delete_account_url() {
 		return $options['delete_account_url'];
 	}
 }
-
-?>

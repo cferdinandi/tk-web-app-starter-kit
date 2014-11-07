@@ -19,6 +19,7 @@
 // Functions used throughout the plugin
 require_once( dirname( __FILE__) . '/admin/wpwebapp-helpers.php' );
 require_once( dirname( __FILE__) . '/admin/wpwebapp-options.php' );
+require_once( dirname( __FILE__) . '/admin/wpwebapp-styles.php' );
 
 // Security
 require_once( dirname( __FILE__) . '/security/wpwebapp-options-security.php' );
@@ -70,5 +71,3 @@ require_once( dirname( __FILE__) . '/forms-delete-account/wpwebapp-form-delete-a
 // Instructions
 require_once( dirname( __FILE__) . '/instructions/wpwebapp-options-logout-links.php' );
 require_once( dirname( __FILE__) . '/instructions/wpwebapp-options-usernames.php' );
-
-?>

@@ -195,5 +195,3 @@ function wpwebapp_get_form_login_custom_layout() {
 	$options = wpwebapp_get_plugin_options_forms_login();
 	return $options['custom_layout'];
 }
-
-?>

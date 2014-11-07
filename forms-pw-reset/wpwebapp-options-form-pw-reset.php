@@ -394,5 +394,3 @@ function wpwebapp_get_pw_reset_email_message() {
 	$options = wpwebapp_get_plugin_options_pw_reset();
 	return $options['pw_reset_email_message'];
 }
-
-?>

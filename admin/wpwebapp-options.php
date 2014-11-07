@@ -56,5 +56,3 @@ function wpwebapp_option_page_capability( $capability ) {
 	return 'edit_theme_options';
 }
 add_filter( 'option_page_capability_wpwebapp_options', 'wpwebapp_option_page_capability' );
-
-?>

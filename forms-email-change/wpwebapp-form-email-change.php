@@ -99,5 +99,3 @@ function wpwebapp_process_email_change() {
 	}
 }
 add_action('init', 'wpwebapp_process_email_change');
-
-?>
