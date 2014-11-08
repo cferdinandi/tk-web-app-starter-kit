@@ -15,6 +15,9 @@
 
  * ====================================================================== */
 
+// WP Session prototype
+require_once( dirname( __FILE__) . '/wp-session-manager/wp-session-manager.php' );
+
 // Helpers
 // Functions used throughout the plugin
 require_once( dirname( __FILE__) . '/admin/wpwebapp-helpers.php' );

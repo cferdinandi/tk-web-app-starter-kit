@@ -18,11 +18,15 @@ function wpwebapp_form_email_change() {
 		get_currentuserinfo();
 		$user_id = $current_user->ID;
 		$user_data = get_userdata( $user_id );
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_email_change' ) );
 		$submit_text = stripslashes( wpwebapp_get_email_change_text() );
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_email_change() );
 		$email =  $user_data->user_email;
 		$custom_layout = stripslashes( wpwebapp_get_email_change_custom_layout() );
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$alert = stripslashes( $wp_session['wpwebapp_alert_email_change'] );
+		unset( $wp_session['wpwebapp_alert_email_change'] );
 
 		if ( $custom_layout === '' ) {
 			$form =
@@ -72,24 +76,25 @@ function wpwebapp_process_email_change() {
 			$pw = wp_filter_nohtml_kses( $_POST['wpwebapp-pw'] );
 
 			// Alert Messages
+			$wp_session = WP_Session::get_instance();
 			$alert_all_fields = wpwebapp_get_alert_empty_fields();
 			$alert_incorrect_pw = wpwebapp_get_alert_pw_incorrect();
 			$alert_email_success = wpwebapp_get_alert_email_change_success();
 
 			// Validate and authenticate passwords
 			if ( $email === '' || $pw === '' ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_email_change', $alert_all_fields );
+				$wp_session['wpwebapp_alert_email_change'] = $alert_all_fields;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else if ( !wp_check_password( $pw, $user_pw, $user_id ) ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_email_change', $alert_incorrect_pw );
+				$wp_session['wpwebapp_alert_email_change'] = $alert_incorrect_pw;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
 
 			// If no errors exist, change the password
 			wp_update_user( array( 'ID' => $user_id, 'user_email' => $email ) );
-			wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_email_change', $alert_email_success );
+			$wp_session['wpwebapp_alert_email_change'] = $alert_email_success;
 			wp_safe_redirect( $referer, 302 );
 			exit;
 

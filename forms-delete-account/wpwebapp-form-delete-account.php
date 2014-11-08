@@ -14,10 +14,14 @@ function wpwebapp_form_delete_account() {
 	if ( is_user_logged_in() ) {
 
 		// Variables
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_delete_account' ) );
 		$submit_text = stripslashes( wpwebapp_get_delete_account_text() );
 		$submit_class = esc_attr( wpwebapp_get_delete_account_button_class() );
 		$custom_layout = stripslashes( wpwebapp_get_delete_account_custom_layout() );
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$alert = stripslashes( $wp_session['wpwebapp_alert_delete_account'] );
+		unset( $wp_session['wpwebapp_alert_delete_account'] );
 
 		if ( $custom_layout === '' ) {
 			$form =
@@ -65,16 +69,17 @@ function wpwebapp_process_delete_account() {
 			$pw = wp_filter_nohtml_kses( $_POST['wpwebapp-delete-password'] );
 
 			// Alert Messages
+			$wp_session = WP_Session::get_instance();
 			$alert_all_fields = wpwebapp_get_alert_empty_fields();
 			$alert_incorrect_pw = wpwebapp_get_alert_pw_incorrect();
 
 			// Validate and authenticate password
 			if ( $pw === '' ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_delete_account', $alert_all_fields );
+				$wp_session['wpwebapp_alert_delete_account'] = $alert_all_fields;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else if ( !wp_check_password( $pw, $user_pw, $user_id ) ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_delete_account', $alert_incorrect_pw );
+				$wp_session['wpwebapp_alert_delete_account'] = $alert_incorrect_pw;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}

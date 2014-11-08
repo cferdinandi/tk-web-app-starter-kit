@@ -17,10 +17,14 @@ function wpwebapp_form_pw_forgot() {
 	} else {
 
 		// Variables
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot' ) );
 		$submit_text = stripslashes( wpwebapp_get_pw_forgot_text() );
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_pw_reset() );
 		$custom_layout = stripslashes( wpwebapp_get_form_signup_custom_layout_pw_forgot() );
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$alert = stripslashes( $wp_session['wpwebapp_alert_pw_forgot'] );
+		unset( $wp_session['wpwebapp_alert_pw_forgot'] );
 
 		if ( $custom_layout === '' ) {
 			$form =
@@ -58,13 +62,17 @@ function wpwebapp_form_pw_reset() {
 	} else {
 
 		// Variables
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot' ) );
 		$user_id = esc_attr( $_GET['id'] );
 		$submit_text = stripslashes( wpwebapp_get_pw_reset_text() );
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_pw_reset() );
 		$pw_requirements = stripslashes( wpwebapp_get_pw_requirements_text() );
 		$custom_layout = stripslashes( wpwebapp_get_form_signup_custom_layout_pw_reset() );
 		$disable_pw_confirm = wpwebapp_get_disable_pw_confirmation();
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$alert = stripslashes( $wp_session['wpwebapp_alert_pw_forgot'] );
+		unset( $wp_session['wpwebapp_alert_pw_forgot'] );
 
 		if ( $custom_layout === '' ) {
 			$pw_confirm = ( $disable_pw_confirm === 'on' ? '' : wpwebapp_form_field_text_input_plus( 'password', 'wpwebapp-pw-reset-new-2', __( 'Confirm New Password', 'wpwebapp' ) ) );
@@ -102,7 +110,9 @@ function wpwebapp_form_pw_reset() {
 function wpwebapp_form_pw_forgot_and_reset() {
 
 	// Get forgot password alert message
-	$status = wpwebapp_get_alert_message( 'wpwebapp_status', 'wpwebapp_status_pw_reset' );
+	$wp_session = WP_Session::get_instance();
+	$status = stripslashes( $wp_session['wpwebapp_pw_reset_status'] );
+	unset( $wp_session['wpwebapp_pw_reset_status'] );
 
 	// If this is password reset URL with a valid key
 	if ( $_GET['action'] === 'reset-pw' && $status === 'reset-key-valid' ) {
@@ -156,6 +166,7 @@ function wpwebapp_process_pw_forgot() {
 			$username_email = $_POST['wpwebapp-username-email'];
 
 			// Alert Messages
+			$wp_session = WP_Session::get_instance();
 			$alert_empty_fields = wpwebapp_get_alert_empty_fields();
 			$alert_login_does_not_exist = wpwebapp_get_alert_login_does_not_exist();
 			$alert_pw_resets_not_allowed = wpwebapp_get_alert_pw_reset_not_allowed();
@@ -164,7 +175,7 @@ function wpwebapp_process_pw_forgot() {
 
 			// Check that form is not empty
 			if ( $_POST['wpwebapp-username-email'] === '' ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_empty_fields );
+				$wp_session['wpwebapp_alert_pw_forgot'] = $alert_empty_fields;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
@@ -178,7 +189,7 @@ function wpwebapp_process_pw_forgot() {
 
 			// Verify that user exists
 			if ( !$user ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_login_does_not_exist );
+				$wp_session['wpwebapp_alert_pw_forgot'] = $alert_login_does_not_exist;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
@@ -189,7 +200,7 @@ function wpwebapp_process_pw_forgot() {
 			// Verify that user is not admin
 			$role_requirements = wpwebapp_get_pw_reset_restriction();
 			if ( user_can( $user_id, $role_requirements ) ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_pw_resets_not_allowed );
+				$wp_session['wpwebapp_alert_pw_forgot'] = $alert_pw_resets_not_allowed;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
@@ -217,11 +228,11 @@ function wpwebapp_process_pw_forgot() {
 
 			// If email was sent successfully
 			if ( $send_email ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_pw_reset_email_success );
+				$wp_session['wpwebapp_alert_pw_forgot'] = $alert_pw_reset_email_success;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_pw_reset_email_failed );
+				$wp_session['wpwebapp_alert_pw_forgot'] = $alert_pw_reset_email_failed;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
@@ -252,15 +263,16 @@ function wpwebapp_process_pw_reset_url() {
 		$db_keys = get_transient( 'wpwebapp_forgot_pw_key_' . $user_id );
 
 		// Alert Messages
+		$wp_session = WP_Session::get_instance();
 		$alert_pw_reset_url_expired = wpwebapp_get_alert_pw_reset_url_expired();
 
 		// Check if reset key is still active
 		if ( !$db_keys || !in_array( $user_key, $db_keys ) ) {
-			wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_forgot', $alert_pw_reset_url_expired );
+			$wp_session['wpwebapp_alert_pw_forgot'] = $alert_pw_reset_url_expired;
 			wp_safe_redirect( $referer, 302 );
 			exit;
 		} else {
-			wpwebapp_set_alert_message( 'wpwebapp_status', 'wpwebapp_status_pw_reset', 'reset-key-valid' );
+			$wp_session['wpwebapp_pw_reset_status'] = 'reset-key-valid';
 			return;
 		}
 
@@ -286,21 +298,22 @@ function wpwebapp_process_pw_reset() {
 			$disable_pw_confirm = wpwebapp_get_disable_pw_confirmation();
 
 			// Alert Messages
+			$wp_session = WP_Session::get_instance();
 			$alert_empty_fields = wpwebapp_get_alert_empty_fields();
 			$alert_pw_match = wpwebapp_get_alert_pw_match();
 			$alert_pw_requirements = wpwebapp_get_alert_pw_requirements();
 
 			// Validate and authenticate passwords
 			if ( $pw_new_1 === '' || ( $disable_pw_confirm === 'off' && $pw_new_2 === '' ) ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_reset', $alert_empty_fields );
+				$wp_session['wpwebapp_alert_pw_reset'] = $alert_empty_fields;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else if ( $disable_pw_confirm === 'off' && $pw_new_1 !== $pw_new_2 ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_reset', $alert_pw_match );
+				$wp_session['wpwebapp_alert_pw_reset'] = $alert_pw_match;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			} else if ( !$pw_test ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_pw_reset', $alert_pw_requirements );
+				$wp_session['wpwebapp_alert_pw_reset'] = $alert_pw_requirements;
 				wp_safe_redirect( $referer, 302 );
 				exit;
 			}
