@@ -64,7 +64,7 @@ function wpwebapp_process_email_change() {
 
 			// Password change variables
 			global $current_user;
-			get_currentuserinfo();
+			// get_currentuserinfo();
 			$referer = esc_url_raw( wpwebapp_get_url() );
 			$user_id = $current_user->ID;
 			$user_pw = $current_user->user_pass;
