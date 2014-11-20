@@ -85,6 +85,7 @@ function wpwebapp_settings_field_custom_layout_pw_reset() {
 		<?php _e( 'Alert', 'wpwebapp' ); ?> - <code>%alert</code><br>
 		<?php _e( 'Password', 'wpwebapp' ); ?> - <code>%password</code><br>
 		<?php _e( 'Password Confirm', 'wpwebapp' ); ?> - <code>%password-confirm</code><br>
+		<?php _e( 'Password Requirements', 'wpwebapp' ); ?> - <code>%requirements</code><br>
 		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
 	</label>
 	<?php

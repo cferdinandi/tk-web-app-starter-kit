@@ -49,6 +49,7 @@ function wpwebapp_settings_field_custom_layout_pw_change() {
 		<?php _e( 'Current Password', 'wpwebapp' ); ?> - <code>%pw-current</code><br>
 		<?php _e( 'New Password', 'wpwebapp' ); ?> - <code>%pw-new</code><br>
 		<?php _e( 'Confirm Password', 'wpwebapp' ); ?> - <code>%pw-confirm</code><br>
+		<?php _e( 'Password Requirements', 'wpwebapp' ); ?> - <code>%requirements</code><br>
 		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
 	</label>
 	<?php

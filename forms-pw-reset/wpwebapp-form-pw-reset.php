@@ -89,6 +89,7 @@ function wpwebapp_form_pw_reset() {
 				'%alert' => $alert,
 				'%password' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-pw-reset-new-1', sprintf( __( 'New Password %s', 'wpwebapp' ), $pw_requirements ) ),
 				'%password-confirm' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-pw-reset-new-2', __( 'Confirm New Password', 'wpwebapp' ) ),
+				'%requirements' => $pw_requirements,
 				'%submit' => wpwebapp_form_field_submit( 'wpwebapp-reset-pw-submit', $submit_class, $submit_text, 'wpwebapp-reset-pw-process-nonce', 'wpwebapp-reset-pw-process' ),
 			);
 			$custom_layout = strtr( $custom_layout, $add_fields );

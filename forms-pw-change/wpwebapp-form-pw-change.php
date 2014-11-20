@@ -45,6 +45,7 @@ function wpwebapp_form_pw_change() {
 				'%pw-current' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-pw-current', __( 'Current Password', 'wpwebapp' ) ),
 				'%pw-new' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-pw-new-1', sprintf( __( 'New Password %s', 'wpwebapp' ), $pw_requirements ) ),
 				'%pw-confirm' => wpwebapp_form_field_text_input( 'password', 'wpwebapp-pw-new-2', __( 'Confirm New Password', 'wpwebapp' ) ),
+				'%requirements' => $pw_requirements,
 				'%submit' => wpwebapp_form_field_submit( 'wpwebapp-change-pw-submit', $submit_class, $submit_text, 'wpwebapp-change-pw-process-nonce', 'wpwebapp-change-pw-process' ),
 			);
 			$custom_layout = strtr( $custom_layout, $add_fields );
