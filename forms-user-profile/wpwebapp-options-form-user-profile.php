@@ -396,5 +396,3 @@ function wpwebapp_get_user_profile_custom_layout() {
 	$options = wpwebapp_get_plugin_options_user_profile();
 	return $options['custom_layout'];
 }
-
-?>

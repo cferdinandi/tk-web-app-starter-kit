@@ -57,6 +57,7 @@ function wpwebapp_settings_field_custom_layout_signup() {
 		<?php _e( 'Username', 'wpwebapp' ); ?> - <code>%username</code><br>
 		<?php _e( 'Email', 'wpwebapp' ); ?> - <code>%email</code><br>
 		<?php _e( 'Password', 'wpwebapp' ); ?> - <code>%password</code><br>
+		<?php _e( 'Password Requirements', 'wpwebapp' ); ?> - <code>%requirements</code><br>
 		<?php _e( 'Age Verification', 'wpwebapp' ); ?> - <code>%verification</code><br>
 		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
 	</label>
@@ -351,5 +352,3 @@ function wpwebapp_get_send_new_user_email_message() {
 	$options = wpwebapp_get_plugin_options_forms_signup();
 	return $options['new_user_email_message'];
 }
-
-?>

@@ -35,12 +35,16 @@ function wpwebapp_form_user_profile() {
 	if ( is_user_logged_in() ) {
 
 		// Variables
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_user_profile' ) );
 		$submit_text = stripslashes( wpwebapp_get_user_profile_text() );
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_user_profile() );
 		$profile_fields = wpwebapp_get_user_profile_field_types();
 		$value = wpwebapp_get_user_profile_info();
 		$custom_layout = stripslashes( wpwebapp_get_user_profile_custom_layout() );
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$alert = stripslashes( $wp_session['wpwebapp_alert_user_profile'] );
+		unset( $wp_session['wpwebapp_alert_user_profile'] );
 
 		if ( $custom_layout === '' ) {
 
@@ -170,8 +174,8 @@ function wpwebapp_process_update_profile() {
 			$field_linkedin = wp_filter_nohtml_kses( $_POST['wpwebapp-user-profile-linkedin'] );
 
 			// Alert Messages
+			$wp_session = WP_Session::get_instance();
 			$alert_success = wpwebapp_get_alert_profile_update_success();
-			$alert_failure = wpwebapp_get_alert_profile_update_failure();
 
 			// Update settings
 			if ( isset($field_name) ) {
@@ -223,7 +227,7 @@ function wpwebapp_process_update_profile() {
 				update_user_meta( $user_id, 'wpwa_user_linkedin', $field_linkedin );
 			}
 
-			wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_user_profile', $alert_success );
+			$wp_session['wpwebapp_alert_user_profile'] = $alert_success;
 			wp_safe_redirect( $referer, 302 );
 			exit;
 
@@ -315,5 +319,3 @@ function wpwebapp_save_user_profile_from_backend( $user_id ) {
 }
 add_action( 'personal_options_update', 'wpwebapp_save_user_profile_from_backend' );
 add_action( 'edit_user_profile_update', 'wpwebapp_save_user_profile_from_backend' );
-
-?>

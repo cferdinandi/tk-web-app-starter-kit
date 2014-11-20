@@ -16,18 +16,19 @@ function wpwebapp_form_login() {
 	} else {
 
 		// Variables
-		$alert = stripslashes( wpwebapp_get_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_login' ) );
-		$username = esc_attr( wpwebapp_get_alert_message( 'wpwebapp_credentials_login_username', 'wpwebapp_username' ) );
 		$forgot_pw_url = esc_url_raw( wpwebapp_get_pw_forgot_url() );
 		$forgot_pw_text = stripslashes( wpwebapp_get_pw_forgot_url_text() );
 		$submit_text = stripslashes( wpwebapp_get_form_login_text() );
 		$submit_class = esc_attr( wpwebapp_get_form_button_class_login() );
 		$custom_layout = stripslashes( wpwebapp_get_form_login_custom_layout() );
-		if ( $forgot_pw_url === '' ) {
-			$forgot_pw = '';
-		} else {
-			$forgot_pw = '<span class="text-small"><a href="' . $forgot_pw_url . '" tabindex="999">' . $forgot_pw_text . '</a></span>';
-		}
+		$forgot_pw = ( empty( $forgot_pw_url ) ? '' : '<span class="text-small"><a href="' . $forgot_pw_url . '" tabindex="999">' . $forgot_pw_text . '</a></span>' );
+
+		// Get alert
+		$wp_session = WP_Session::get_instance();
+		$username = esc_attr( $wp_session['wpwebapp_credentials_login_username'] );
+		$alert = stripslashes( $wp_session['wpwebapp_alert_login'] );
+		unset( $wp_session['wpwebapp_credentials_login_username'] );
+		unset( $wp_session['wpwebapp_alert_login'] );
 
 		if ( $custom_layout === '' ) {
 			$form =
@@ -70,15 +71,13 @@ function wpwebapp_process_login() {
 
 			// Login variables
 			$referer = esc_url_raw( wpwebapp_get_url() );
-			$login_redirect = esc_url_raw( wpwebapp_get_redirect_url_logged_in() );
-			$alert_login = stripslashes( wpwebapp_get_alert_login_incorrect() );
 			$username = sanitize_user( $_POST['wpwebapp-username'] );
 			$password = wp_filter_nohtml_kses( $_POST['wpwebapp-password'] );
-			if ( isset( $_POST['wpwebapp-rememberme'] ) ) {
-				$rememberme = true;
-			} else {
-				$rememberme = false;
-			}
+			$rememberme = ( isset( $_POST['wpwebapp-rememberme'] ) ? true : false );
+
+			// Alerts
+			$wp_session = WP_Session::get_instance();
+			$alert_login = stripslashes( wpwebapp_get_alert_login_incorrect() );
 
 			// If login is an email, get username
 			if ( is_email( $username ) ) {
@@ -97,14 +96,12 @@ function wpwebapp_process_login() {
 
 			// If errors
 			if ( is_wp_error( $login ) ) {
-				wpwebapp_set_alert_message( 'wpwebapp_alert', 'wpwebapp_alert_login', $alert_login );
-				wpwebapp_set_alert_message( 'wpwebapp_credentials_login_username', 'wpwebapp_username', $username );
-				wp_safe_redirect( $referer, 302 );
-				exit;
-			} else {
-				wp_safe_redirect( $login_redirect, 302 );
-				exit;
+				$wp_session['wpwebapp_credentials_login_username'] = $username;
+				$wp_session['wpwebapp_alert_login'] = $alert_login;
 			}
+
+			wp_safe_redirect( $referer, 302 );
+			exit;
 
 		} else {
 			die( 'Security check' );
@@ -112,5 +109,3 @@ function wpwebapp_process_login() {
 	}
 }
 add_action('init', 'wpwebapp_process_login');
-
-?>

@@ -227,5 +227,3 @@ function wpwebapp_has_numbers( $string ) {
 function wpwebapp_has_special_chars( $string ) {
 	return preg_match('/[^a-zA-Z\d]/', $string);
 }
-
-?>

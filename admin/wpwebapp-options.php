@@ -21,6 +21,7 @@ function wpwebapp_plugin_options_render_main_page() {
 			'<p><strong>Documentation and Settings</strong></p>' .
 			'<ul>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_security">Security</a></li>' .
+				'<li><a href="admin.php?page=wpwebapp_plugin_options_invite_only">Invite-Only</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_user_access">User Access</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_navigation">Navigation</a></li>' .
 				'<li><a href="admin.php?page=wpwebapp_plugin_options_alerts">Alerts</a></li>' .
@@ -55,5 +56,3 @@ function wpwebapp_option_page_capability( $capability ) {
 	return 'edit_theme_options';
 }
 add_filter( 'option_page_capability_wpwebapp_options', 'wpwebapp_option_page_capability' );
-
-?>

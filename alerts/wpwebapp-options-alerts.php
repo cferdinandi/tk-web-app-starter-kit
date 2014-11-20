@@ -21,6 +21,14 @@ function wpwebapp_settings_field_alert_empty_fields() {
 	<?php
 }
 
+function wpwebapp_settings_field_alert_invite_only() {
+	$options = wpwebapp_get_plugin_options_alerts();
+	?>
+	<input type="text" name="wpwebapp_plugin_options_alerts[alert_invite_only]" id="alert-invite-only" value="<?php echo esc_html( $options['alert_invite_only'] ); ?>"><br>
+	<label class="description" for="alert-invite-only"><?php _e( 'Default: <code>&lt;p&gt;An invitation is required to sign-up. Sorry.&lt;/p&gt;</code>', 'wpwebapp' ); ?></label>
+	<?php
+}
+
 function wpwebapp_settings_field_alert_pw_requirements() {
 	$options = wpwebapp_get_plugin_options_alerts();
 	?>
@@ -180,6 +188,7 @@ function wpwebapp_get_plugin_options_alerts() {
 	$saved = (array) get_option( 'wpwebapp_plugin_options_alerts' );
 	$defaults = array(
 		'alert_empty_fields' => '',
+		'alert_invite_only' => '',
 		'alert_pw_requirements' => '',
 		'alert_pw_no_match' => '',
 		'alert_incorrect_login' => '',
@@ -224,6 +233,9 @@ function wpwebapp_plugin_options_validate_alerts( $input ) {
 
 	if ( isset( $input['alert_empty_fields'] ) && ! empty( $input['alert_empty_fields'] ) )
 		$output['alert_empty_fields'] = wp_filter_post_kses( $input['alert_empty_fields'] );
+
+	if ( isset( $input['alert_invite_only'] ) && ! empty( $input['alert_invite_only'] ) )
+		$output['alert_invite_only'] = wp_filter_post_kses( $input['alert_invite_only'] );
 
 	if ( isset( $input['alert_pw_requirements'] ) && ! empty( $input['alert_pw_requirements'] ) )
 		$output['alert_pw_requirements'] = wp_filter_post_kses( $input['alert_pw_requirements'] );
@@ -323,6 +335,7 @@ function wpwebapp_plugin_options_init_alerts() {
 	// Fields
 	add_settings_section( 'alerts', '',  '__return_false', 'wpwebapp_plugin_options_alerts' );
 	add_settings_field( 'alert_empty_fields', __( 'Empty Fields', 'wpwebapp' ) . '<div class="description">' . __( 'Signup, Password Change, and Password Reset Forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_empty_fields', 'wpwebapp_plugin_options_alerts', 'alerts' );
+	add_settings_field( 'alert_invite_only', __( 'Invite-Only', 'wpwebapp' ) . '<div class="description">' . __( 'Signup Forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_invite_only', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_pw_requirements', __( 'Password Requirements', 'wpwebapp' ) . '<div class="description">' . __( 'Signup, Password Change and Password Reset forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_pw_requirements', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_pw_no_match', __( 'Passwords Don\'t Match', 'wpwebapp' ) . '<div class="description">' . __( 'Password Change and Password Reset forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_pw_no_match', 'wpwebapp_plugin_options_alerts', 'alerts' );
 	add_settings_field( 'alert_incorrect_login', __( 'Incorrect Login', 'wpwebapp' ) . '<div class="description">' . __( 'Login and Forgot Password forms', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_alert_incorrect_login', 'wpwebapp_plugin_options_alerts', 'alerts' );
@@ -376,6 +389,16 @@ function wpwebapp_get_alert_empty_fields() {
 		return '<p>' . __( 'Please complete all fields.', 'wpwebapp' ) . '</p>';
 	} else {
 		return $options['alert_empty_fields'];
+	}
+}
+
+// Get alert for invite-only signups
+function wpwebapp_get_alert_invite_only() {
+	$options = wpwebapp_get_plugin_options_alerts();
+	if ( $options['alert_invite_only'] === '' ) {
+		return '<p>' . __( 'An invitation is required to sign-up. Sorry.', 'wpwebapp' ) . '</p>';
+	} else {
+		return $options['alert_invite_only'];
 	}
 }
 
@@ -587,5 +610,3 @@ function wpwebapp_get_alert_profile_update_failure() {
 		return $options['alert_profile_update_failure'];
 	}
 }
-
-?>

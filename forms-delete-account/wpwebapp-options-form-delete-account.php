@@ -37,6 +37,19 @@ function wpwebapp_settings_field_delete_account_url() {
 	<?php
 }
 
+function wpwebapp_settings_field_delete_account_custom_layout() {
+	$options = wpwebapp_get_plugin_options_delete_account();
+	?>
+	<textarea class="large-text" type="text" name="wpwebapp_plugin_options_delete_account[custom_layout]" id="custom-layout" cols="50" rows="10"><?php echo esc_textarea( $options['custom_layout'] ); ?></textarea>
+	<label class="description">
+		<?php _e( 'Use the following variables to add fields to the layout:', 'wpwebapp' ); ?><br>
+		<?php _e( 'Alert', 'wpwebapp' ); ?> - <code>%alert</code><br>
+		<?php _e( 'Password', 'wpwebapp' ); ?> - <code>%password</code><br>
+		<?php _e( 'Submit Button', 'wpwebapp' ); ?> - <code>%submit</code>
+	</label>
+	<?php
+}
+
 
 
 
@@ -54,6 +67,7 @@ function wpwebapp_get_plugin_options_delete_account() {
 		'delete_button_class' => '',
 		'delete_account_text' => '',
 		'delete_account_url' => '',
+		'custom_layout' => '',
 	);
 
 	$defaults = apply_filters( 'wpwebapp_default_plugin_options_delete_account', $defaults );
@@ -87,6 +101,9 @@ function wpwebapp_plugin_options_validate_delete_account( $input ) {
 	if ( isset( $input['delete_account_url'] ) && ! empty( $input['delete_account_url'] ) )
 		$output['delete_account_url'] = wp_filter_post_kses( $input['delete_account_url'] );
 
+	if ( isset( $input['custom_layout'] ) && ! empty( $input['custom_layout'] ) )
+		$output['custom_layout'] = wp_filter_post_kses( $input['custom_layout'] );
+
 	return apply_filters( 'wpwebapp_plugin_options_validate_delete_account', $output, $input );
 }
 
@@ -113,7 +130,7 @@ function wpwebapp_plugin_options_render_page_delete_account() {
 			<li><?php _e( 'Function', 'wpwebapp' ) ?>: <code>&lt;?php echo wpwebapp_form_delete_account(); ?&gt;</code></li>
 		</ul>
 
-		<p><strong><?php _e( 'Note', 'wpwebapp' ) ?>:</strong> <?php _e( 'The Delete Account button doesn’t include any sort of confirmation message or verification, so you should add your own. You might have an initial “Delete Account” button that opens a modal window, a drop-down menu, or a new page where the real delete button resides.', 'wpwebapp' ) ?></p>
+		<p><strong><?php _e( 'Note', 'wpwebapp' ) ?>:</strong> <?php _e( 'The Delete Account button verifies a user\'s intent to delete their account by asking them to verify their email address.', 'wpwebapp' ) ?></p>
 
 		<h3><?php _e( 'Settings', 'wpwebapp' ) ?></h3>
 
@@ -140,6 +157,7 @@ function wpwebapp_plugin_options_init_delete_account() {
 	add_settings_field( 'delete_button_class', __( 'Delete Button Class', 'wpwebapp' ) . '<div class="description">' . __( 'Class to apply to the "delete account" button.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_delete_button_class', 'wpwebapp_plugin_options_delete_account', 'forms' );
 	add_settings_field( 'delete_account_text', __( 'Delete Account Text', 'wpwebapp' ) . '<div class="description">' . __( 'Delete Account Form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_delete_account_text', 'wpwebapp_plugin_options_delete_account', 'forms' );
 	add_settings_field( 'delete_account_url', __( 'Delete Account Redirect URL', 'wpwebapp' ) . '<div class="description">' . __( 'Delete Account Form', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_delete_account_url', 'wpwebapp_plugin_options_delete_account', 'forms' );
+	add_settings_field( 'custom_layout', __( 'Custom Layout', 'wpwebapp' ) . '<div class="description">' . __( 'Customize the layout of the form with your own markup.', 'wpwebapp' ) . '</div>', 'wpwebapp_settings_field_delete_account_custom_layout', 'wpwebapp_plugin_options_delete_account', 'forms' );
 
 }
 add_action( 'admin_init', 'wpwebapp_plugin_options_init_delete_account' );
@@ -198,4 +216,8 @@ function wpwebapp_get_delete_account_url() {
 	}
 }
 
-?>
+// Get custom delete account layout
+function wpwebapp_get_delete_account_custom_layout() {
+	$options = wpwebapp_get_plugin_options_delete_account();
+	return $options['custom_layout'];
+}

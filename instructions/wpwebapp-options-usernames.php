@@ -47,5 +47,3 @@ function wpwebapp_option_page_capability_usernames( $capability ) {
 	return 'edit_theme_options';
 }
 add_filter( 'option_page_capability_wpwebapp_options_usernames', 'wpwebapp_option_page_capability_usernames' );
-
-?>

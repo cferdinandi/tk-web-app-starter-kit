@@ -95,6 +95,3 @@ function wpwebapp_menu_display_username( $menu ){
 	return str_replace( '[wpwa_display_username]', $username, do_shortcode( $menu ) );
 }
 add_filter('wp_nav_menu', 'wpwebapp_menu_display_username');
-
-
-?>

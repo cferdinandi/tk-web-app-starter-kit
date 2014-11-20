@@ -286,6 +286,7 @@ function wpwebapp_get_block_admin_access() {
 
 // Get default page access setting
 function wpwebapp_get_default_page_access() {
+	$options = wpwebapp_get_plugin_options_user_access();
 	return $options['default_page_access'];
 }
 
@@ -314,5 +315,3 @@ function wpwebapp_get_blog_post_access() {
 	$options = wpwebapp_get_plugin_options_user_access();
 	return $options['blog_posts_require_login'];
 }
-
-?>

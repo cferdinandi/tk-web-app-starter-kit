@@ -193,5 +193,3 @@ function wpwebapp_get_email_change_custom_layout() {
 	$options = wpwebapp_get_plugin_options_email_change();
 	return $options['custom_layout'];
 }
-
-?>

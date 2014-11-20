@@ -15,14 +15,22 @@
 
  * ====================================================================== */
 
+// WP Session prototype
+require_once( dirname( __FILE__) . '/wp-session-manager/wp-session-manager.php' );
+
 // Helpers
 // Functions used throughout the plugin
 require_once( dirname( __FILE__) . '/admin/wpwebapp-helpers.php' );
 require_once( dirname( __FILE__) . '/admin/wpwebapp-options.php' );
+require_once( dirname( __FILE__) . '/admin/wpwebapp-styles.php' );
 
 // Security
 require_once( dirname( __FILE__) . '/security/wpwebapp-options-security.php' );
 require_once( dirname( __FILE__) . '/security/wpwebapp-security.php' );
+
+// Invite-Only
+require_once( dirname( __FILE__) . '/invite-only/wpwebapp-options-invite-only.php' );
+require_once( dirname( __FILE__) . '/invite-only/wpwebapp-invite-only.php' );
 
 // User Access
 require_once( dirname( __FILE__) . '/user-access/wpwebapp-options-user-access.php' );
@@ -66,5 +74,3 @@ require_once( dirname( __FILE__) . '/forms-delete-account/wpwebapp-form-delete-a
 // Instructions
 require_once( dirname( __FILE__) . '/instructions/wpwebapp-options-logout-links.php' );
 require_once( dirname( __FILE__) . '/instructions/wpwebapp-options-usernames.php' );
-
-?>
